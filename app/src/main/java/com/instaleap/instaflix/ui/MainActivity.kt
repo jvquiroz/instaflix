@@ -1,4 +1,4 @@
-package com.instaleap.instaflix
+package com.instaleap.instaflix.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
