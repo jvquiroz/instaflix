@@ -28,7 +28,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.instaleap.instaflix.R
 import com.instaleap.instaflix.ui.navigation.NavigationItem
-import com.instaleap.instaflix.ui.navigation.Screen
+import com.instaleap.instaflix.ui.navigation.ScreenRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,7 +82,7 @@ fun Screen(
     ) { contentPadding ->
         NavHost(
             navController = rootNavController,
-            startDestination = navigationItems.getOrNull(0)?.route ?: Screen.Default.route,
+            startDestination = navigationItems.getOrNull(0)?.route ?: ScreenRoute.Default.route,
             modifier = modifier.padding(contentPadding),
             enterTransition = {
                 slideInHorizontally(
@@ -105,7 +105,7 @@ fun Screen(
                 }
             }
 
-            composable(Screen.Default.route) {
+            composable(ScreenRoute.Default.route) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(text = stringResource(id = R.string.something_went_wrong))
                 }

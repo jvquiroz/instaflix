@@ -1,13 +1,11 @@
 package com.instaleap.instaflix.ui.components
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.instaleap.instaflix.R
 import com.instaleap.instaflix.ui.navigation.NavigationItem
-import com.instaleap.instaflix.ui.navigation.Screen
+import com.instaleap.instaflix.ui.navigation.ScreenRoute
 import com.instaleap.instaflix.ui.theme.Movies
 import com.instaleap.instaflix.ui.theme.NowPlaying
 import com.instaleap.instaflix.ui.theme.OnAirToday
@@ -20,25 +18,25 @@ fun navigationItems(): List<NavigationItem> {
     return listOf(
         NavigationItem(
             title = stringResource(R.string.movies),
-            route = Screen.Movies.route,
+            route = ScreenRoute.Movies.route,
             selectedIcon = Icons.Filled.Movies,
             unselectedIcon = Icons.Outlined.Movies,
             children = listOf(
                 NavigationItem(
                     title = stringResource(R.string.popular),
-                    route = Screen.MoviesPopular.route,
+                    route = ScreenRoute.MoviesPopular.route,
                     selectedIcon = Icons.Filled.Popular,
                     unselectedIcon = Icons.Outlined.Popular
                 ),
                 NavigationItem(
                     title = stringResource(R.string.top_rated),
-                    route = Screen.MoviesTopRated.route,
+                    route = ScreenRoute.MoviesTopRated.route,
                     selectedIcon = Icons.Filled.TopRated,
                     unselectedIcon = Icons.Outlined.TopRated
                 ),
                 NavigationItem(
                     title = stringResource(R.string.now_playing),
-                    route = Screen.MoviesNowPlaying.route,
+                    route = ScreenRoute.MoviesNowPlaying.route,
                     selectedIcon = Icons.Filled.NowPlaying,
                     unselectedIcon = Icons.Outlined.NowPlaying
                 )
@@ -46,25 +44,25 @@ fun navigationItems(): List<NavigationItem> {
         ),
         NavigationItem(
             title = stringResource(R.string.tv_shows),
-            route = Screen.TvShows.route,
+            route = ScreenRoute.TvShows.route,
             selectedIcon = Icons.Filled.Tv,
             unselectedIcon = Icons.Outlined.Tv,
             children = listOf(
                 NavigationItem(
                     title = stringResource(R.string.popular),
-                    route = Screen.TvShowsPopular.route,
+                    route = ScreenRoute.TvShowsPopular.route,
                     selectedIcon = Icons.Filled.Popular,
                     unselectedIcon = Icons.Outlined.Popular
                 ),
                 NavigationItem(
                     title = stringResource(R.string.top_rated),
-                    route = Screen.TvShowsTopRated.route,
+                    route = ScreenRoute.TvShowsTopRated.route,
                     selectedIcon = Icons.Filled.TopRated,
                     unselectedIcon = Icons.Outlined.TopRated
                 ),
                 NavigationItem(
                     title = stringResource(R.string.airing_today),
-                    route = Screen.TvShowsNowPlaying.route,
+                    route = ScreenRoute.TvShowsNowPlaying.route,
                     selectedIcon = Icons.Filled.OnAirToday,
                     unselectedIcon = Icons.Outlined.OnAirToday
                 )

@@ -10,7 +10,8 @@ class CachedMediaRepository(
     private val localDataSource: LocalMediaDataSource,
     private val remoteDataSource: RemoteMediaDataSource
 ) : MediaRepository {
-    override fun getRuns(): Flow<List<Media>> {
+
+    override fun getPopularMovies(): Flow<List<Media>> {
         TODO("Not yet implemented")
     }
 }

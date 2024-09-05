@@ -1,7 +1,10 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.kapt)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.jetbrains.kotlin.compose.compiler)
     alias(libs.plugins.hilt.gradle.plugin)
 }
@@ -21,6 +24,19 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val keystoreFile = project.rootProject.file("apikeys.properties")
+        val properties = Properties()
+        properties.load(keystoreFile.inputStream())
+
+        //return empty key in case something goes wrong
+        val apiKey = properties.getProperty("TMDB_KEY") ?: ""
+
+        buildConfigField(
+            type = "String",
+            name = "TMDB_KEY",
+            value = apiKey
+        )
     }
 
     buildTypes {
@@ -41,6 +57,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -63,6 +80,14 @@ dependencies {
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
+    implementation(libs.ktor.client.auth)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.serialization)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.content.negociation)
+    implementation(libs.ktor.serialization.kotlinx.json)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

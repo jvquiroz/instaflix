@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.instaleap.instaflix.ui.navigation.NavigationItem
-import com.instaleap.instaflix.ui.navigation.Screen
+import com.instaleap.instaflix.ui.navigation.ScreenRoute
 
 @Composable
 fun SecondLevelNavigation(
@@ -15,7 +15,7 @@ fun SecondLevelNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Movies.route
+        startDestination = ScreenRoute.Movies.route
     ) {
         items.forEach { item ->
             composable(item.route) {

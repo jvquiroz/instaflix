@@ -2,16 +2,16 @@ package com.instaleap.instaflix.ui.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 
-sealed class Screen(val route: String) {
-    data object Movies : Screen("movies")
-    data object MoviesNowPlaying : Screen("movies_now_playing")
-    data object MoviesPopular : Screen("movies_popular")
-    data object MoviesTopRated : Screen("movies_top_rated")
-    data object TvShows : Screen("tv_shows")
-    data object TvShowsNowPlaying : Screen("tv_shows_now_playing")
-    data object TvShowsTopRated : Screen("tv_shows_top_rated")
-    data object TvShowsPopular : Screen("tv_shows_popular")
-    data object Default : Screen("default_route")
+sealed class ScreenRoute(val route: String) {
+    data object Movies : ScreenRoute("movies")
+    data object MoviesNowPlaying : ScreenRoute("movies_now_playing")
+    data object MoviesPopular : ScreenRoute("movies_popular")
+    data object MoviesTopRated : ScreenRoute("movies_top_rated")
+    data object TvShows : ScreenRoute("tv_shows")
+    data object TvShowsNowPlaying : ScreenRoute("tv_shows_now_playing")
+    data object TvShowsTopRated : ScreenRoute("tv_shows_top_rated")
+    data object TvShowsPopular : ScreenRoute("tv_shows_popular")
+    data object Default : ScreenRoute("default_route")
 }
 
 data class NavigationItem(
