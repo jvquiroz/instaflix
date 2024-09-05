@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">instaflix</string>
+    <string name="movies">Movies</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="tv_shows">TV Shows</string>
+    <string name="airing_today">Airing Today</string>
+    <string name="menu">Menu</string>
+    <string name="something_went_wrong">Something went wrong :(</string>
 </resources>
