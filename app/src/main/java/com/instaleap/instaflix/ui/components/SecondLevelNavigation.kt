@@ -1,12 +1,11 @@
 package com.instaleap.instaflix.ui.components
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.instaleap.instaflix.domain.model.ScreenRoute
 import com.instaleap.instaflix.ui.navigation.NavigationItem
+import com.instaleap.instaflix.ui.navigation.ScreenRoute
 
 @Composable
 fun SecondLevelNavigation(
@@ -21,8 +20,7 @@ fun SecondLevelNavigation(
         items.forEach { item ->
             composable(item.route) {
                 ScreenWithBottomNavigation(
-                    title = item.title,
-                    navigationItems = item.children,
+                    navigationRoot = item,
                     onMenuClick = onMenuClick
                 )
             }

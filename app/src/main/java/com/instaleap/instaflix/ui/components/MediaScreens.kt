@@ -1,10 +1,9 @@
 package com.instaleap.instaflix.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,15 +32,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.instaleap.instaflix.R
 import com.instaleap.instaflix.ui.MainViewModel
 import com.instaleap.instaflix.ui.MovieUiState
-
+import com.instaleap.instaflix.ui.navigation.NavigationItem
 
 @Composable
-fun MediaScreen(modifier: Modifier = Modifier, route: String) {
+fun MediaScreen(
+    modifier: Modifier = Modifier,
+    navigationItem: NavigationItem
+) {
     val currentPage = rememberSaveable { mutableIntStateOf(1) }
     val viewModel: MainViewModel = hiltViewModel()
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
         LaunchedEffect(Unit) {
-            viewModel.getMovies(route)
+            viewModel.getMovies(navigationItem)
         }
         val uiState by viewModel.uiState.collectAsState()
         when (val state = uiState) {
@@ -53,7 +58,7 @@ fun MediaScreen(modifier: Modifier = Modifier, route: String) {
                     itemsList = state.movies,
                     onLoadMore = { page ->
                         viewModel.isLoadingMore.value = true
-                        viewModel.getMovies(route, page)
+                        viewModel.getMovies(navigationItem, page)
                     }
                 )
             }
@@ -70,38 +75,37 @@ fun MediaGrid(
     itemsList: List<MediaUI>,
     onLoadMore: (Int) -> Unit,
     currentPage: MutableIntState,
-    isLoading: MutableState<Boolean>,
+    isLoading: MutableState<Boolean>
 ) {
     val itemModifier = Modifier
         .border(1.dp, Color.Blue)
         .height(200.dp)
-    Column(horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxSize()){
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = modifier
-        ) {
-            items(itemsList) { photo ->
-                Text("Single item: ${photo.title}", itemModifier)
-            }
-            item(span = { GridItemSpan(3) }) {
-                Box(contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)) {
-                    if (isLoading.value) {
-                        CircularProgressIndicator()
-                    } else if (currentPage.intValue < 3) {
-                        Button(
-                            onClick = {
-                                isLoading.value = true
-                                currentPage.intValue++
-                                onLoadMore(currentPage.intValue)
-                            }
-                        ) {
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(16.dp),
+        modifier = modifier
+    ) {
+        items(itemsList) { photo ->
+            Text("Single item: ${photo.title}", itemModifier)
+        }
+        item(span = { GridItemSpan(3) }) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+            ) {
+                when {
+                    isLoading.value -> CircularProgressIndicator()
+                    currentPage.intValue < 11 -> {
+                        Button(onClick = {
+                            isLoading.value = true
+                            currentPage.intValue++
+                            onLoadMore(currentPage.intValue)
+                        }) {
                             Text(text = stringResource(R.string.load_more))
                         }
                     }
@@ -111,13 +115,10 @@ fun MediaGrid(
     }
 }
 
-
 @Composable
 fun LoadingScreen() {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Red.copy(alpha = 0.5f)),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()

@@ -1,7 +1,6 @@
 package com.instaleap.instaflix.data.remote
 
 import com.instaleap.instaflix.di.IoDispatcher
-import com.instaleap.instaflix.domain.model.Media
 import com.instaleap.instaflix.domain.model.ResultState
 import com.instaleap.instaflix.domain.repository.RemoteMediaDataSource
 import kotlinx.coroutines.CoroutineDispatcher
@@ -13,14 +12,15 @@ class RemoteMediaDataSourceImp @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : RemoteMediaDataSource {
 
-    override suspend fun getMedia(route: String, page: Int): ResultState<List<Media>> {
+    override suspend fun getMovies(route: String, page: Int): ResultState<MoviesResponseDto> {
         return withContext(ioDispatcher) {
-            when (val result = service.getMedia(route, page)) {
-                is ResultState.Failure -> ResultState.Failure(result.error)
-                is ResultState.Success -> ResultState.Success(result.data.results.map { item ->
-                    item.toMedia()
-                })
-            }
+            service.getMovies(route, page)
+        }
+    }
+
+    override suspend fun getTvShows(route: String, page: Int): ResultState<TvShowsResponseDto> {
+        return withContext(ioDispatcher) {
+            service.getTvShows(route, page)
         }
     }
 }

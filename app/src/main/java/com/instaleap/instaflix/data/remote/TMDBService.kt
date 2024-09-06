@@ -2,7 +2,7 @@ package com.instaleap.instaflix.data.remote
 
 import com.instaleap.instaflix.domain.model.ErrorState
 import com.instaleap.instaflix.domain.model.ResultState
-import com.instaleap.instaflix.domain.model.ScreenRoute
+import com.instaleap.instaflix.ui.navigation.ScreenRoute
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
@@ -42,12 +42,32 @@ class TMDBService @Inject constructor(
             }
         }
     }
-    override suspend fun getMedia(route: String, page: Int): ResultState<MediaResponseDto> {
+
+    override suspend fun getMovies(route: String, page: Int): ResultState<MoviesResponseDto> {
         return try {
             client.get {
                 url(getRoute(route))
                 parameter("page", page)
-            }.body<MediaResponseDto>().let {
+            }.body<MoviesResponseDto>().let {
+                ResultState.Success(it)
+            }
+        } catch(e: RedirectResponseException) {
+            handleException(e)
+        } catch(e: ClientRequestException) {
+            handleException(e)
+        } catch(e: ServerResponseException) {
+            handleException(e)
+        } catch(e: Exception) {
+            handleException(e)
+        }
+    }
+
+    override suspend fun getTvShows(route: String, page: Int): ResultState<TvShowsResponseDto> {
+        return try {
+            client.get {
+                url(getRoute(route))
+                parameter("page", page)
+            }.body<TvShowsResponseDto>().let {
                 ResultState.Success(it)
             }
         } catch(e: RedirectResponseException) {
@@ -63,7 +83,6 @@ class TMDBService @Inject constructor(
 
     private fun handleException(e: Exception): ResultState.Failure {
         println("Error: ${e.message}")
-        MediaResponseDto()
         return ResultState.Failure(ErrorState.UNKNOWN)
     }
 }

@@ -1,42 +1,69 @@
 package com.instaleap.instaflix.data.remote
 
-import com.instaleap.instaflix.R
-import com.instaleap.instaflix.domain.model.Media
+import com.instaleap.instaflix.domain.model.VideoContent
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MediaResponseDto(
+data class MoviesResponseDto(
     val page: Int = 0,
-    val results: List<MediaItemDto> = emptyList(),
+    val results: List<MovieDto> = emptyList(),
     @SerialName("total_pages")
     val totalPages: Int = 0
 )
 
 @Serializable
-data class MediaItemDto(
+data class TvShowsResponseDto(
+    val page: Int = 0,
+    val results: List<TvShowDto> = emptyList(),
+    @SerialName("total_pages")
+    val totalPages: Int = 0
+)
+
+@Serializable
+data class TvShowDto(
     val id: Int,
-    val title: String? = null,
-    val name: String? = null,
+    val name: String,
     val overview: String,
+    @SerialName("first_air_date")
+    val releaseDate: String,
+    @SerialName("vote_average")
+    val voteAverage: Double,
     @SerialName("poster_path")
     val posterPath: String,
-    @SerialName("release_date")
-    val releaseDate: String? = null,
     @SerialName("backdrop_path")
-    val backdropPath: String? = null,
-    @SerialName("vote_average")
-    val voteAverage: Double
+    val backdropPath: String? = null
 ) {
-    fun toMedia() = Media(
+    fun toMedia() = VideoContent(
         id = id,
-        title = if(title?.isNotEmpty() == true) {
-            title
-        } else if (name?.isNotEmpty() == true) {
-            name
-        } else {
-            "Unknown"
-        },
+        title = name,
+        overview = overview,
+        releaseDate = releaseDate,
+        voteAverage = voteAverage,
+        poster = posterPath
+    )
+}
+
+@Serializable
+data class MovieDto(
+    val id: Int,
+    val title: String,
+    val overview: String,
+    @SerialName("release_date")
+    val releaseDate: String,
+    @SerialName("vote_average")
+    val voteAverage: Double,
+    @SerialName("poster_path")
+    val posterPath: String,
+    @SerialName("backdrop_path")
+    val backdropPath: String? = null
+) {
+    fun toMedia() = VideoContent(
+        id = id,
+        title = title,
+        overview = overview,
+        releaseDate = releaseDate,
+        voteAverage = voteAverage,
         poster = posterPath
     )
 }

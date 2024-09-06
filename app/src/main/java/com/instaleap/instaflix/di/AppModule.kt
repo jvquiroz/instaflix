@@ -8,7 +8,7 @@ import com.instaleap.instaflix.data.remote.RemoteMediaDataSourceImp
 import com.instaleap.instaflix.data.remote.TMDBService
 import com.instaleap.instaflix.data.repository.CachedMediaRepository
 import com.instaleap.instaflix.domain.repository.LocalMediaDataSource
-import com.instaleap.instaflix.domain.repository.MediaRepository
+import com.instaleap.instaflix.domain.repository.VideoContentRepository
 import com.instaleap.instaflix.domain.repository.RemoteMediaDataSource
 import dagger.Module
 import dagger.Provides
@@ -32,7 +32,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
 import javax.inject.Qualifier
 import javax.inject.Singleton
-import kotlin.coroutines.CoroutineContext
 
 @Qualifier
 annotation class IoDispatcher
@@ -120,12 +119,10 @@ object AppModule {
     @Singleton
     fun provideMediaRepository(
         localMediaDataSource: LocalMediaDataSource,
-        remoteMediaDataSource: RemoteMediaDataSource,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher): MediaRepository {
+        remoteMediaDataSource: RemoteMediaDataSource): VideoContentRepository {
         return CachedMediaRepository(
             localDataSource = localMediaDataSource,
-            remoteDataSource = remoteMediaDataSource,
-            ioDispatcher = ioDispatcher
+            remoteDataSource = remoteMediaDataSource
         )
     }
 
