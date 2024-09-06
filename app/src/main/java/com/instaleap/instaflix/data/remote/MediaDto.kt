@@ -1,5 +1,7 @@
 package com.instaleap.instaflix.data.remote
 
+import com.instaleap.instaflix.R
+import com.instaleap.instaflix.domain.model.Media
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,14 +16,27 @@ data class MediaResponseDto(
 @Serializable
 data class MediaItemDto(
     val id: Int,
-    val title: String,
+    val title: String? = null,
+    val name: String? = null,
     val overview: String,
     @SerialName("poster_path")
     val posterPath: String,
     @SerialName("release_date")
-    val releaseDate: String,
+    val releaseDate: String? = null,
     @SerialName("backdrop_path")
-    val backdropPath: String,
+    val backdropPath: String? = null,
     @SerialName("vote_average")
     val voteAverage: Double
-)
+) {
+    fun toMedia() = Media(
+        id = id,
+        title = if(title?.isNotEmpty() == true) {
+            title
+        } else if (name?.isNotEmpty() == true) {
+            name
+        } else {
+            "Unknown"
+        },
+        poster = posterPath
+    )
+}

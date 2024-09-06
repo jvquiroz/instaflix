@@ -1,13 +1,7 @@
 package com.instaleap.instaflix.data.remote
 
-import com.instaleap.instaflix.domain.model.Result
+import com.instaleap.instaflix.domain.model.ResultState
 
 interface MediaService {
-    //TODO: change return type to Result<T>
-    suspend fun getPopularMovies(): Result<MediaResponseDto>
-    suspend fun getPopularTvShows(): MediaResponseDto
-    suspend fun getTopRatedMovies(): MediaResponseDto
-    suspend fun getTopRatedTvShows(): MediaResponseDto
-    suspend fun getNowPlayingMovies(): MediaResponseDto
-    suspend fun getAiringTodayTVShows(): MediaResponseDto
+    suspend fun getMedia(route: String, page: Int): ResultState<MediaResponseDto>
 }

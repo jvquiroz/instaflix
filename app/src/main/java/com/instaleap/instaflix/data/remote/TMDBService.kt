@@ -1,5 +1,8 @@
 package com.instaleap.instaflix.data.remote
 
+import com.instaleap.instaflix.domain.model.ErrorState
+import com.instaleap.instaflix.domain.model.ResultState
+import com.instaleap.instaflix.domain.model.ScreenRoute
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
@@ -13,47 +16,54 @@ import javax.inject.Inject
 class TMDBService @Inject constructor(
     private val client: HttpClient
 ) : MediaService {
-    override suspend fun getPopularMovies(): MediaResponseDto {
+
+    private fun getRoute(route: String): String {
+        return when (route) {
+            ScreenRoute.MoviesPopular.route -> {
+                Routes.POPULAR_MOVIES
+            }
+            ScreenRoute.MoviesTopRated.route -> {
+                Routes.TOP_RATED_MOVIES
+            }
+            ScreenRoute.MoviesNowPlaying.route -> {
+                Routes.NOW_PLAYING_MOVIES
+            }
+            ScreenRoute.TvShowsPopular.route -> {
+                Routes.POPULAR_TV_SHOWS
+            }
+            ScreenRoute.TvShowsTopRated.route -> {
+                Routes.TOP_RATED_TV_SHOWS
+            }
+            ScreenRoute.TvShowsNowPlaying.route -> {
+                Routes.AIRING_TODAY_TV_SHOWS
+            }
+            else -> {
+                Routes.POPULAR_MOVIES
+            }
+        }
+    }
+    override suspend fun getMedia(route: String, page: Int): ResultState<MediaResponseDto> {
         return try {
             client.get {
-                url(Routes.POPULAR_MOVIES)
-                //parameter("api_key", BuildConfig.API_KEY)
-            }.body()
+                url(getRoute(route))
+                parameter("page", page)
+            }.body<MediaResponseDto>().let {
+                ResultState.Success(it)
+            }
         } catch(e: RedirectResponseException) {
-            // 3xx - responses
-            println("Error: ${e.response.status.description}")
-            MediaResponseDto()
+            handleException(e)
         } catch(e: ClientRequestException) {
-            // 4xx - responses
-            println("Error: ${e.response.status.description}")
-            MediaResponseDto()
+            handleException(e)
         } catch(e: ServerResponseException) {
-            // 5xx - responses
-            println("Error: ${e.response.status.description}")
-            MediaResponseDto()
+            handleException(e)
         } catch(e: Exception) {
-            println("Error: ${e.message}")
-            MediaResponseDto()
+            handleException(e)
         }
     }
 
-    override suspend fun getPopularTvShows(): MediaResponseDto {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getTopRatedMovies(): MediaResponseDto {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getTopRatedTvShows(): MediaResponseDto {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getNowPlayingMovies(): MediaResponseDto {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getAiringTodayTVShows(): MediaResponseDto {
-        TODO("Not yet implemented")
+    private fun handleException(e: Exception): ResultState.Failure {
+        println("Error: ${e.message}")
+        MediaResponseDto()
+        return ResultState.Failure(ErrorState.UNKNOWN)
     }
 }

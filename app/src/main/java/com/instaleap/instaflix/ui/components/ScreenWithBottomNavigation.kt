@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,12 +28,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.instaleap.instaflix.R
+import com.instaleap.instaflix.domain.model.ScreenRoute
 import com.instaleap.instaflix.ui.navigation.NavigationItem
-import com.instaleap.instaflix.ui.navigation.ScreenRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Screen(
+fun ScreenWithBottomNavigation(
     modifier: Modifier = Modifier,
     title: String,
     navigationItems: List<NavigationItem>,
@@ -40,6 +41,7 @@ fun Screen(
 ) {
     val rootNavController = rememberNavController()
     val navBackStackEntry by rootNavController.currentBackStackEntryAsState()
+
 
     Scaffold(
         topBar = {
@@ -99,9 +101,7 @@ fun Screen(
         ) {
             navigationItems.forEach { navigationItem ->
                 composable(route = navigationItem.route) {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = navigationItem.title)
-                    }
+                    MediaScreen(route = navigationItem.route)
                 }
             }
 

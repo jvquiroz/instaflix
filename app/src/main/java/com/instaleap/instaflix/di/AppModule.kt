@@ -2,8 +2,14 @@ package com.instaleap.instaflix.di
 
 import android.util.Log
 import com.instaleap.instaflix.BuildConfig
+import com.instaleap.instaflix.data.local.LocalMediaDataSourceImp
 import com.instaleap.instaflix.data.remote.MediaService
+import com.instaleap.instaflix.data.remote.RemoteMediaDataSourceImp
 import com.instaleap.instaflix.data.remote.TMDBService
+import com.instaleap.instaflix.data.repository.CachedMediaRepository
+import com.instaleap.instaflix.domain.repository.LocalMediaDataSource
+import com.instaleap.instaflix.domain.repository.MediaRepository
+import com.instaleap.instaflix.domain.repository.RemoteMediaDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,12 +27,38 @@ import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
+import javax.inject.Qualifier
 import javax.inject.Singleton
+import kotlin.coroutines.CoroutineContext
+
+@Qualifier
+annotation class IoDispatcher
+
+@Qualifier
+annotation class DefaultDispatcher
+
+@Qualifier
+annotation class MainDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @IoDispatcher
+    fun provideIoDispatcher() : CoroutineDispatcher = Dispatchers.IO
+
+    @Provides
+    @DefaultDispatcher
+    fun provideDefaultDispatcher() : CoroutineDispatcher = Dispatchers.Default
+
+    @Provides
+    @MainDispatcher
+    fun provideMainDispatcher() : CoroutineDispatcher = Dispatchers.Main
+
     @Provides
     @Singleton
     fun provideHttpClient(): HttpClient {
@@ -68,4 +100,34 @@ object AppModule {
     fun provideTMDBApi(client: HttpClient): MediaService {
         return TMDBService(client)
     }
+
+    @Provides
+    @Singleton
+    fun provideRemoteMediaDataSourceImp(
+        service: MediaService,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): RemoteMediaDataSource {
+        return RemoteMediaDataSourceImp(service, ioDispatcher)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocalMediaDataSourceImp(): LocalMediaDataSource {
+        return LocalMediaDataSourceImp()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMediaRepository(
+        localMediaDataSource: LocalMediaDataSource,
+        remoteMediaDataSource: RemoteMediaDataSource,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher): MediaRepository {
+        return CachedMediaRepository(
+            localDataSource = localMediaDataSource,
+            remoteDataSource = remoteMediaDataSource,
+            ioDispatcher = ioDispatcher
+        )
+    }
+
+
 }

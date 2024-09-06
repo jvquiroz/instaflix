@@ -4,8 +4,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.instaleap.instaflix.R
+import com.instaleap.instaflix.domain.model.ScreenRoute
 import com.instaleap.instaflix.ui.navigation.NavigationItem
-import com.instaleap.instaflix.ui.navigation.ScreenRoute
 import com.instaleap.instaflix.ui.theme.Movies
 import com.instaleap.instaflix.ui.theme.NowPlaying
 import com.instaleap.instaflix.ui.theme.OnAirToday

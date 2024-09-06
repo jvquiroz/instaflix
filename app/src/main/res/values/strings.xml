@@ -8,4 +8,6 @@
     <string name="airing_today">Airing Today</string>
     <string name="menu">Menu</string>
     <string name="something_went_wrong">Something went wrong :(</string>
+    <string name="load_more">Load more</string>
+    <string name="unknown">Unknown</string>
 </resources>

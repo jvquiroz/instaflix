@@ -1,8 +1,8 @@
 package com.instaleap.instaflix.domain.repository
 
 import com.instaleap.instaflix.domain.model.Media
-import kotlinx.coroutines.flow.Flow
+import com.instaleap.instaflix.domain.model.ResultState
 
 interface MediaRepository {
-    fun getPopularMovies(): Flow<List<Media>>
+    suspend fun getMedia(route: String, page: Int): ResultState<List<Media>>
 }
