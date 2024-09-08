@@ -50,6 +50,8 @@ com.instaleap.instaflix
 
 ```
 
+**Download the APK:** [Instaflix APK](https://github.com/jvquiroz/instaflix/blob/05c89d1da505ef14e4c9e2ac877f51fb5f778c0a/instaflix.apk)
+
 ## Setup
 
 1. **Clone the Repository**
