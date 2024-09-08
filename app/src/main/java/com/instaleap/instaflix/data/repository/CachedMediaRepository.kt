@@ -31,15 +31,17 @@ class CachedMediaRepository @Inject constructor(
         route: String,
         page: Int
     ): ResultState<List<VideoContent>> {
+        val cachedData = localDataSource.getVideoContent(route).map { it.toVideoContent() }
         return when (fetchedData) {
             is ResultState.Success -> {
-                localDataSource.upsertVideoContent(items = fetchedData.data, page = page, route = route)
-                fetchedData
+                val cachedIds = cachedData.map { it.id }.toSet()
+                val newItems = fetchedData.data.filterNot { it.id in cachedIds }
+                localDataSource.upsertVideoContent(items = newItems, page = page, route = route)
+                fetchedData.copy(data = newItems)
             }
             is ResultState.Failure -> {
                 //requesting more pages only makes sense when the data is coming from the remote source
                 if (page == 1) {
-                    val cachedData = localDataSource.getVideoContent(route).map { it.toVideoContent() }
                     ResultState.Success(cachedData, true)
                 } else {
                     ResultState.Failure(fetchedData.error)

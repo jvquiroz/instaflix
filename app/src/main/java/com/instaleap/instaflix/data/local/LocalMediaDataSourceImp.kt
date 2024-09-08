@@ -1,5 +1,7 @@
 package com.instaleap.instaflix.data.local
 
+import android.database.sqlite.SQLiteException
+import android.util.Log
 import com.instaleap.instaflix.di.IoDispatcher
 import com.instaleap.instaflix.domain.model.VideoContent
 import com.instaleap.instaflix.domain.repository.LocalMediaDataSource
@@ -23,9 +25,13 @@ class LocalMediaDataSourceImp @Inject constructor(
             if (page == 1) {
                 videoContentDatabase.videoContentDao().deleteAll(route)
             }
-            videoContentDatabase.videoContentDao().insertAll(
-                *items.map { it.toEntity(route) }.toTypedArray()
-            )
+            try {
+                videoContentDatabase.videoContentDao().insertAll(
+                    *items.map { it.toEntity(route) }.toTypedArray()
+                )
+            } catch (exception: SQLiteException) {
+                Log.w("LocalMediaDataSourceImp", "Error inserting video content", exception)
+            }
         }
     }
 }
