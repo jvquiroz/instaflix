@@ -5,5 +5,5 @@ import com.instaleap.instaflix.domain.model.ResultState
 import com.instaleap.instaflix.ui.navigation.NavigationItem
 
 interface VideoContentRepository {
-    suspend fun getMedia(navigationItem: NavigationItem, page: Int): ResultState<List<VideoContent>>
+    suspend fun getVideoContent(navigationItem: NavigationItem, page: Int): ResultState<List<VideoContent>>
 }

@@ -5,12 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.instaleap.instaflix.R
 import com.instaleap.instaflix.domain.model.VideoContentType
-import com.instaleap.instaflix.ui.theme.Movies
-import com.instaleap.instaflix.ui.theme.NowPlaying
-import com.instaleap.instaflix.ui.theme.OnAirToday
-import com.instaleap.instaflix.ui.theme.Popular
-import com.instaleap.instaflix.ui.theme.TopRated
-import com.instaleap.instaflix.ui.theme.Tv
+import com.instaleap.instaflix.ui.theme.*
+import kotlinx.serialization.Serializable
 
 @Composable
 fun navigationItems(): List<NavigationItem> {
@@ -81,14 +77,25 @@ fun navigationItems(): List<NavigationItem> {
     )
 }
 
+@Serializable
 sealed class ScreenRoute(val route: String) {
     object Movies : ScreenRoute("movies")
     object MoviesNowPlaying : ScreenRoute("movies_now_playing")
     object MoviesPopular : ScreenRoute("movies_popular")
-    data object MoviesTopRated : ScreenRoute("movies_top_rated")
-    data object TvShows : ScreenRoute("tv_shows")
-    data object TvShowsNowPlaying : ScreenRoute("tv_shows_now_playing")
-    data object TvShowsTopRated : ScreenRoute("tv_shows_top_rated")
-    data object TvShowsPopular : ScreenRoute("tv_shows_popular")
-    data object Default : ScreenRoute("default_route")
+    object MoviesTopRated : ScreenRoute("movies_top_rated")
+    object TvShows : ScreenRoute("tv_shows")
+    object TvShowsNowPlaying : ScreenRoute("tv_shows_now_playing")
+    object TvShowsTopRated : ScreenRoute("tv_shows_top_rated")
+    object TvShowsPopular : ScreenRoute("tv_shows_popular")
+    object Default : ScreenRoute("default_route")
+
+    @Serializable
+    data class DetailsRoute(
+        val id: Int,
+        val title: String,
+        val overview: String,
+        val releaseDate: String,
+        val poster: String,
+        val backdrop: String? = null
+    ) : ScreenRoute("details")
 }

@@ -17,29 +17,24 @@ class TMDBService @Inject constructor(
     private val client: HttpClient
 ) : MediaService {
 
+    private val routes = object {
+        val POPULAR_MOVIES = "/3/movie/popular"
+        val TOP_RATED_MOVIES = "/3/movie/top_rated"
+        val NOW_PLAYING_MOVIES = "/3/movie/now_playing"
+        val POPULAR_TV_SHOWS = "/3/tv/popular"
+        val TOP_RATED_TV_SHOWS = "/3/tv/top_rated"
+        val AIRING_TODAY_TV_SHOWS = "/3/tv/airing_today"
+    }
+
     private fun getRoute(route: String): String {
         return when (route) {
-            ScreenRoute.MoviesPopular.route -> {
-                Routes.POPULAR_MOVIES
-            }
-            ScreenRoute.MoviesTopRated.route -> {
-                Routes.TOP_RATED_MOVIES
-            }
-            ScreenRoute.MoviesNowPlaying.route -> {
-                Routes.NOW_PLAYING_MOVIES
-            }
-            ScreenRoute.TvShowsPopular.route -> {
-                Routes.POPULAR_TV_SHOWS
-            }
-            ScreenRoute.TvShowsTopRated.route -> {
-                Routes.TOP_RATED_TV_SHOWS
-            }
-            ScreenRoute.TvShowsNowPlaying.route -> {
-                Routes.AIRING_TODAY_TV_SHOWS
-            }
-            else -> {
-                Routes.POPULAR_MOVIES
-            }
+            ScreenRoute.MoviesPopular.route -> routes.POPULAR_MOVIES
+            ScreenRoute.MoviesTopRated.route -> routes.TOP_RATED_MOVIES
+            ScreenRoute.MoviesNowPlaying.route -> routes.NOW_PLAYING_MOVIES
+            ScreenRoute.TvShowsPopular.route -> routes.POPULAR_TV_SHOWS
+            ScreenRoute.TvShowsTopRated.route -> routes.TOP_RATED_TV_SHOWS
+            ScreenRoute.TvShowsNowPlaying.route -> routes.AIRING_TODAY_TV_SHOWS
+            else -> routes.POPULAR_MOVIES
         }
     }
 
@@ -51,13 +46,7 @@ class TMDBService @Inject constructor(
             }.body<MoviesResponseDto>().let {
                 ResultState.Success(it)
             }
-        } catch(e: RedirectResponseException) {
-            handleException(e)
-        } catch(e: ClientRequestException) {
-            handleException(e)
-        } catch(e: ServerResponseException) {
-            handleException(e)
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             handleException(e)
         }
     }
@@ -70,19 +59,18 @@ class TMDBService @Inject constructor(
             }.body<TvShowsResponseDto>().let {
                 ResultState.Success(it)
             }
-        } catch(e: RedirectResponseException) {
-            handleException(e)
-        } catch(e: ClientRequestException) {
-            handleException(e)
-        } catch(e: ServerResponseException) {
-            handleException(e)
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             handleException(e)
         }
     }
 
-    private fun handleException(e: Exception): ResultState.Failure {
-        println("Error: ${e.message}")
-        return ResultState.Failure(ErrorState.UNKNOWN)
+    private fun handleException(exception: Exception)  : ResultState.Failure {
+        return when (exception) {
+            is ServerResponseException,
+            is RedirectResponseException,
+            is ClientRequestException -> {
+                ResultState.Failure(ErrorState.INTERNET_CONNECTION)
+            } else ->  ResultState.Failure(ErrorState.UNKNOWN)
+        }
     }
 }

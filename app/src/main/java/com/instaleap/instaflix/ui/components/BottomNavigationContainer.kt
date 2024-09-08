@@ -8,17 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -28,13 +21,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.instaleap.instaflix.R
+import com.instaleap.instaflix.ui.components.screens.DetailsScreen
+import com.instaleap.instaflix.ui.components.screens.MediaScreen
 import com.instaleap.instaflix.ui.navigation.NavigationItem
 import com.instaleap.instaflix.ui.navigation.ScreenRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenWithBottomNavigation(
+fun BottomNavigationContainer(
     modifier: Modifier = Modifier,
     navigationRoot: NavigationItem,
     onMenuClick: () -> Unit = {}
@@ -105,8 +101,26 @@ fun ScreenWithBottomNavigation(
         ) {
             navigationRoot.children.forEach { navigationItem ->
                 composable(route = navigationItem.route) {
-                    MediaScreen(navigationItem = navigationItem)
+                    MediaScreen(
+                        navigationItem = navigationItem,
+                        onItemClick = { mediaUi ->
+                            rootNavController.navigate(
+                                ScreenRoute.DetailsRoute(
+                                    id = mediaUi.id,
+                                    title = mediaUi.title,
+                                    overview = mediaUi.overview,
+                                    releaseDate = mediaUi.releaseDate,
+                                    poster = mediaUi.poster,
+                                    backdrop = mediaUi.backdrop
+                                )
+                            )
+                        }
+                    )
                 }
+            }
+
+            composable<ScreenRoute.DetailsRoute> {
+                DetailsScreen(it.toRoute())
             }
 
             composable(ScreenRoute.Default.route) {

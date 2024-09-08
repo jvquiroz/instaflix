@@ -10,4 +10,10 @@
     <string name="something_went_wrong">Something went wrong :(</string>
     <string name="load_more">Load more</string>
     <string name="unknown">Unknown</string>
+    <string name="error_displaying_cached_data">Error getting data from server, displaying cached data</string>
+    <string name="error_no_internet_connection">Error getting data from server</string>
+    <string name="error_unexpected">An un expected error happened.</string>
+    <string name="connection_error">Connection Error</string>
+    <string name="check_internet_connection">Please check you internet connection or try again later.</string>
+    <string name="ok">Ok</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.instaleap.instaflix.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,11 +15,13 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import com.instaleap.instaflix.R
 import com.instaleap.instaflix.ui.navigation.NavigationItem
 
@@ -33,11 +36,22 @@ fun NavigationDrawer(
 
     ModalDrawerSheet {
         Spacer(modifier = Modifier.height(spacerHeight))
+
+        Image(
+            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            contentDescription = "logo",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
+            contentScale = ContentScale.Crop
+        )
+
         Text(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             text = stringResource(id = R.string.app_name)
         )
+
         Spacer(modifier = Modifier.height(spacerHeight))
         HorizontalDivider()
         Spacer(modifier = Modifier.height(spacerHeight))

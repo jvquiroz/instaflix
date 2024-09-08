@@ -27,19 +27,16 @@ data class TvShowDto(
     val overview: String,
     @SerialName("first_air_date")
     val releaseDate: String,
-    @SerialName("vote_average")
-    val voteAverage: Double,
     @SerialName("poster_path")
     val posterPath: String,
     @SerialName("backdrop_path")
     val backdropPath: String? = null
 ) {
-    fun toMedia() = VideoContent(
+    fun toVideoContent() = VideoContent(
         id = id,
         title = name,
         overview = overview,
         releaseDate = releaseDate,
-        voteAverage = voteAverage,
         poster = posterPath
     )
 }
@@ -51,19 +48,17 @@ data class MovieDto(
     val overview: String,
     @SerialName("release_date")
     val releaseDate: String,
-    @SerialName("vote_average")
-    val voteAverage: Double,
     @SerialName("poster_path")
     val posterPath: String,
     @SerialName("backdrop_path")
     val backdropPath: String? = null
 ) {
-    fun toMedia() = VideoContent(
+    fun toVideoContent() = VideoContent(
         id = id,
         title = title,
         overview = overview,
         releaseDate = releaseDate,
-        voteAverage = voteAverage,
+        backdrop = backdropPath,
         poster = posterPath
     )
 }

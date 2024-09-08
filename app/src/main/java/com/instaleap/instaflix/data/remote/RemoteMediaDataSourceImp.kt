@@ -12,15 +12,9 @@ class RemoteMediaDataSourceImp @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : RemoteMediaDataSource {
 
-    override suspend fun getMovies(route: String, page: Int): ResultState<MoviesResponseDto> {
-        return withContext(ioDispatcher) {
-            service.getMovies(route, page)
-        }
-    }
+    override suspend fun getMovies(route: String, page: Int): ResultState<MoviesResponseDto> =
+        withContext(ioDispatcher) { service.getMovies(route, page) }
 
-    override suspend fun getTvShows(route: String, page: Int): ResultState<TvShowsResponseDto> {
-        return withContext(ioDispatcher) {
-            service.getTvShows(route, page)
-        }
-    }
+    override suspend fun getTvShows(route: String, page: Int): ResultState<TvShowsResponseDto> =
+        withContext(ioDispatcher) { service.getTvShows(route, page) }
 }

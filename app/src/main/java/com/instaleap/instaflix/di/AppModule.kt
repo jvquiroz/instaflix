@@ -3,6 +3,7 @@ package com.instaleap.instaflix.di
 import android.util.Log
 import com.instaleap.instaflix.BuildConfig
 import com.instaleap.instaflix.data.local.LocalMediaDataSourceImp
+import com.instaleap.instaflix.data.local.VideoContentDatabase
 import com.instaleap.instaflix.data.remote.MediaService
 import com.instaleap.instaflix.data.remote.RemoteMediaDataSourceImp
 import com.instaleap.instaflix.data.remote.TMDBService
@@ -30,6 +31,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
+import javax.inject.Named
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -46,54 +48,71 @@ annotation class MainDispatcher
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
+    // Dispatcher Providers
     @Provides
     @IoDispatcher
-    fun provideIoDispatcher() : CoroutineDispatcher = Dispatchers.IO
+    fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
     @Provides
     @DefaultDispatcher
-    fun provideDefaultDispatcher() : CoroutineDispatcher = Dispatchers.Default
+    fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 
     @Provides
     @MainDispatcher
-    fun provideMainDispatcher() : CoroutineDispatcher = Dispatchers.Main
+    fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 
+    // Base URL
     @Provides
     @Singleton
-    fun provideHttpClient(): HttpClient {
+    @Named("base_url")
+    fun provideBaseUrl(): String {
+        return "https://api.themoviedb.org/"
+    }
+
+    // Ktor HTTP Client Configuration
+    @Provides
+    @Singleton
+    fun provideHttpClient(@Named("base_url") baseUrl: String): HttpClient {
         return HttpClient(Android) {
+            // Base URL and Content Type
             defaultRequest {
+                url(baseUrl)
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
             }
 
+            // Content Negotiation (JSON)
             install(ContentNegotiation) {
                 json(Json {
-                    prettyPrint = true
-                    json(Json{ ignoreUnknownKeys = true })
+                    prettyPrint = true // Enable for debugging (consider disabling in production)
+                    ignoreUnknownKeys = true
                 })
-
             }
 
+            // Authentication (Bearer Token)
             install(Auth) {
                 bearer {
                     loadTokens {
                         BearerTokens(
                             accessToken = BuildConfig.TMDB_KEY,
-                            refreshToken = "")
+                            refreshToken = "" // Not used in this example
+                        )
                     }
                 }
             }
+
+            // Logging
             install(Logging) {
                 logger = object : io.ktor.client.plugins.logging.Logger {
                     override fun log(message: String) {
-                        Log.v("Logger Ktor =>", message)
+                        Log.v("Ktor Logger", message)
                     }
                 }
-                level = LogLevel.ALL
+                level = LogLevel.ALL // Change to desired logging level
             }
         }
     }
 
+    // Services and Data Sources
     @Provides
     @Singleton
     fun provideTMDBApi(client: HttpClient): MediaService {
@@ -111,20 +130,23 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideLocalMediaDataSourceImp(): LocalMediaDataSource {
-        return LocalMediaDataSourceImp()
+    fun provideLocalMediaDataSourceImp(
+        videoContentDatabase: VideoContentDatabase,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): LocalMediaDataSource {
+        return LocalMediaDataSourceImp(videoContentDatabase, ioDispatcher)
     }
 
+    // Repository
     @Provides
     @Singleton
     fun provideMediaRepository(
         localMediaDataSource: LocalMediaDataSource,
-        remoteMediaDataSource: RemoteMediaDataSource): VideoContentRepository {
+        remoteMediaDataSource: RemoteMediaDataSource
+    ): VideoContentRepository {
         return CachedMediaRepository(
             localDataSource = localMediaDataSource,
             remoteDataSource = remoteMediaDataSource
         )
     }
-
-
 }

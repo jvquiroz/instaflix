@@ -1,5 +1,4 @@
-package com.instaleap.instaflix.ui.navigation
-
+package com.instaleap.instaflix.ui.components.screens
 
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
@@ -11,11 +10,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.instaleap.instaflix.ui.components.NavigationDrawer
-import com.instaleap.instaflix.ui.components.SecondLevelNavigation
+import com.instaleap.instaflix.ui.navigation.navigationItems
 import kotlinx.coroutines.launch
 
 @Composable
-fun AppNavigation(modifier: Modifier) {
+fun MainScreenRoot(modifier: Modifier) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val items = navigationItems()
     val navController = rememberNavController()
@@ -37,7 +36,7 @@ fun AppNavigation(modifier: Modifier) {
                 )
             }
         ) {
-            SecondLevelNavigation(
+            MainScreen(
                 navController = navController,
                 items = items,
                 onMenuClick = {

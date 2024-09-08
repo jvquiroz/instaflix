@@ -53,3 +53,7 @@ val Icons.Filled.NowPlaying
 val Icons.Outlined.NowPlaying
     @Composable
     get() = ImageVector.vectorResource(R.drawable.ic_now_playing_outline)
+
+val Icons.Filled.NoNetwork
+    @Composable
+    get() = ImageVector.vectorResource(R.drawable.ic_no_network)

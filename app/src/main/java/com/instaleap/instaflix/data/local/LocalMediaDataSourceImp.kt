@@ -1,16 +1,31 @@
 package com.instaleap.instaflix.data.local
 
+import com.instaleap.instaflix.di.IoDispatcher
 import com.instaleap.instaflix.domain.model.VideoContent
-import com.instaleap.instaflix.domain.model.ResultState
 import com.instaleap.instaflix.domain.repository.LocalMediaDataSource
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class LocalMediaDataSourceImp: LocalMediaDataSource {
-    override fun getRuns(): Flow<List<VideoContent>> {
-        TODO("Not yet implemented")
+class LocalMediaDataSourceImp @Inject constructor(
+    private val videoContentDatabase: VideoContentDatabase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+) : LocalMediaDataSource {
+
+    override suspend fun getVideoContent(route: String): List<VideoContentEntity> {
+        return withContext(ioDispatcher) {
+            videoContentDatabase.videoContentDao().getMoviesByType(route)
+        }
     }
 
-    override suspend fun upsertRuns(runs: List<VideoContent>): ResultState<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun upsertVideoContent(items: List<VideoContent>, page: Int, route: String) {
+        withContext(ioDispatcher) {
+            if (page == 1) {
+                videoContentDatabase.videoContentDao().deleteAll(route)
+            }
+            videoContentDatabase.videoContentDao().insertAll(
+                *items.map { it.toEntity(route) }.toTypedArray()
+            )
+        }
     }
 }
