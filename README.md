@@ -2,6 +2,10 @@
 
 This project is an Android app designed to showcase information about movies and TV shows using The Movie Database (TMDB) as the data source. It was created as part of a coding challenge for a senior Android developer position.
 
+![App Screenshots](https://github.com/jvquiroz/instaflix/blob/main/app.png?raw=true)
+
+https://github.com/jvquiroz/instaflix/blob/main/app.png?raw=true
+
 ## Features
 
 - **Main Navigation Drawer:** Allows users to select between Movies and TV Shows.
