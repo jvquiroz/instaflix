@@ -4,8 +4,6 @@ This project is an Android app designed to showcase information about movies and
 
 ![App Screenshots](https://github.com/jvquiroz/instaflix/blob/main/app.png?raw=true)
 
-https://github.com/jvquiroz/instaflix/blob/main/app.png?raw=true
-
 ## Features
 
 - **Main Navigation Drawer:** Allows users to select between Movies and TV Shows.
